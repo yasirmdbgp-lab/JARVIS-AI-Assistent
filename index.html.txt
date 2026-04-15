@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>JARVIS AI Assistant - Hindi & English</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        /* Main Container */
+        .jarvis-container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(10, 20, 40, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 48px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 2px rgba(0,255,255,0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            color: #8899aa;
+            font-size: 0.9rem;
+        }
+
+        /* JARVIS Circle */
+        .jarvis-circle {
+            width: 180px;
+            height: 180px;
+            margin: 20px auto;
+            background: radial-gradient(circle at 30% 30%, #1a3a5a, #0a1a2a);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(0,255,255,0.3), inset 0 0 20px rgba(0,255,255,0.2);
+            border: 2px solid #00ffff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .jarvis-circle.listening {
+            box-shadow: 0 0 50px rgba(0,255,255,0.8);
+            animation: pulse 1.5s infinite;
+            border-color: #ff00ff;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 30px rgba(0,255,255,0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(0,255,255,0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 30px rgba(0,255,255,0.5); }
+        }
+
+        .jarvis-icon {
+            font-size: 4rem;
+        }
+
+        .jarvis-status {
+            font-size: 0.9rem;
+            color: #00ffff;
+            margin-top: 10px;
+        }
+
+        /* Language Switch */
+        .lang-switch {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .lang-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #1a2a3a;
+            color: #aaa;
+        }
+
+        .lang-btn.active {
+            background: #00ffff;
+            color: #0a0f1e;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        /* Conversation Display */
+        .conversation {
+            background: rgba(0,0,0,0.5);
+            border-radius: 24px;
+            padding: 16px;
+            height: 300px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 90%;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #00aaff, #0066aa);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .jarvis-message {
+            background: linear-gradient(135deg, #2a3a4a, #1a2a3a);
+            color: #00ffff;
+            border: 1px solid #00ffff33;
+            border-bottom-left-radius: 5px;
+        }
+
+        /* Voice Button */
+        .voice-btn {
+            width: 80px;
+            height: 80px;
+            margin: 10px auto;
+            background: linear-gradient(135deg, #ff0066, #cc0044);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255,0,102,0.5);
+        }
+
+        .voice-btn:active {
+            transform: scale(0.95);
+        }
+
+        .voice-btn span {
+            font-size: 2.5rem;
+        }
+
+        /* Input Area */
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 40px;
+            background: #1a2a3a;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            border: 1px solid #00ffff33;
+        }
+
+        .input-area input:focus {
+            border-color: #00ffff;
+        }
+
+        .input-area button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 40px;
+            background: #00ffff;
+            color: #0a0f1e;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #667788;
+            font-size: 0.7rem;
+        }
+
+        /* Scrollbar */
+        .conversation::-webkit-scrollbar {
+            width: 5px;
+        }
+        .conversation::-webkit-scrollbar-track {
+            background: #1a2a3a;
+            border-radius: 10px;
+        }
+        .conversation::-webkit-scrollbar-thumb {
+            background: #00ffff;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="jarvis-container">
+    <div class="header">
+        <h1>⚡ J.A.R.V.I.S</h1>
+        <p>Your Intelligent Voice Assistant</p>
+    </div>
+
+    <!-- JARVIS Circle -->
+    <div class="jarvis-circle" id="jarvisCircle">
+        <div class="jarvis-icon">🤖</div>
+        <div class="jarvis-status" id="jarvisStatus">Ready</div>
+    </div>
+
+    <!-- Language Switch -->
+    <div class="lang-switch">
+        <button class="lang-btn active" data-lang="en">🇬🇧 English</button>
+        <button class="lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+    </div>
+
+    <!-- Conversation -->
+    <div class="conversation" id="conversation">
+        <div class="message jarvis-message">
+            👋 Namaste! I'm JARVIS. <br>
+            आप कैसे हैं? How can I help you today?
+        </div>
+    </div>
+
+    <!-- Voice Button -->
+    <div class="voice-btn" id="voiceBtn">
+        <span>🎤</span>
+    </div>
+
+    <!-- Text Input Alternative -->
+    <div class="input-area">
+        <input type="text" id="textInput" placeholder="Type your message...">
+        <button id="sendBtn">Send</button>
+    </div>
+
+    <div class="footer">
+        Tap the mic and speak • English & हिंदी
+    </div>
+</div>
+
+<script>
+    // Language settings
+    let currentLang = 'en'; // 'en' or 'hi'
+    
+    // Messages in both languages
+    const messages = {
+        en: {
+            listening: "🎙️ Listening...",
+            processing: "🧠 Processing...",
+            ready: "Ready",
+            thinking: "🤔 Thinking...",
+            noInput: "I didn't hear anything. Please try again.",
+            sorry: "Sorry, I couldn't understand. Please try again.",
+            greeting: "Hello! I'm JARVIS. How can I help you?",
+            greeting2: "Good to see you again! What can I do for you?",
+            help: "I can answer questions, tell you the time, search the web, and more!"
+        },
+        hi: {
+            listening: "🎙️ सुन रहा हूँ...",
+            processing: "🧠 प्रोसेस कर रहा हूँ...",
+            ready: "तैयार",
+            thinking: "🤔 सोच रहा हूँ...",
+            noInput: "मुझे कुछ सुनाई नहीं दिया। कृपया फिर से बोलें।",
+            sorry: "माफ़ करें, मैं समझ नहीं पाया। कृपया फिर से कोशिश करें।",
+            greeting: "नमस्ते! मैं JARVIS हूँ। आपकी कैसे मदद कर सकता हूँ?",
+            greeting2: "आपको फिर देखकर अच्छा लगा! मैं क्या कर सकता हूँ आपके लिए?",
+            help: "मैं सवालों के जवाब दे सकता हूँ, समय बता सकता हूँ, वेब सर्च कर सकता हूँ, और भी बहुत कुछ!"
+        }
+    };
+
+    // DOM Elements
+    const conversationDiv = document.getElementById('conversation');
+    const jarvisCircle = document.getElementById('jarvisCircle');
+    const jarvisStatus = document.getElementById('jarvisStatus');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const textInput = document.getElementById('textInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const langBtns = document.querySelectorAll('.lang-btn');
+
+    // Speech Recognition
+    let recognition = null;
+    let isListening = false;
+
+    // Speech Synthesis
+    let synth = window.speechSynthesis;
+
+    // Check browser support
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        
+        // Set language based on current selection
+        recognition.lang = currentLang === 'en' ? 'en-US' : 'hi-IN';
+    } else {
+        addMessage("⚠️ Your browser doesn't support voice recognition. Please use Chrome or Edge on mobile.", 'jarvis-message');
+        voiceBtn.style.opacity = '0.5';
+        voiceBtn.style.pointerEvents = 'none';
+    }
+
+    // Add message to conversation
+    function addMessage(text, className) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${className}`;
+        
+        // Add emoji prefix
+        if (className === 'jarvis-message') {
+            messageDiv.innerHTML = `🤖 ${text}`;
+        } else {
+            messageDiv.innerHTML = `👤 ${text}`;
+        }
+        
+        conversationDiv.appendChild(messageDiv);
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+    }
+
+    // Speak text
+    function speak(text) {
+        if (!synth) return;
+        
+        // Cancel any ongoing speech
+        synth.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Set language
+        if (currentLang === 'hi') {
+            utterance.lang = 'hi-IN';
+            // Use Hindi voice if available
+            const voices = synth.getVoices();
+            const hindiVoice = voices.find(voice => voice.lang === 'hi-IN');
+            if (hindiVoice) utterance.voice = hindiVoice;
+        } else {
+            utterance.lang = 'en-US';
+        }
+        
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        
+        utterance.onend = () => {
+            if (!isListening) {
+                jarvisStatus.innerText = messages[currentLang].ready;
+                jarvisCircle.classList.remove('listening');
+            }
+        };
+        
+        synth.speak(utterance);
+    }
+
+    // Process user input and generate response
+    async function processInput(userText) {
+        if (!userText || userText.trim() === '') {
+            addMessage(messages[currentLang].noInput, 'jarvis-message');
+            speak(messages[currentLang].noInput);
+            return;
+        }
+        
+        // Show thinking status
+        jarvisStatus.innerText = messages[currentLang].thinking;
+        addMessage(userText, 'user-message');
+        
+        // Convert to lowercase for easier matching
+        const lowerText = userText.toLowerCase();
+        
+        // --- Smart Response System (No API Key Required) ---
+        let response = '';
+        
+        // Time related queries
+        if (lowerText.includes('time') || lowerText.includes('टाइम') || lowerText.includes('समय') || lowerText.includes('बजे')) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString(currentLang === 'en' ? 'en-US' : 'hi-IN', { hour: '2-digit', minute: '2-digit' });
+            response = currentLang === 'en' ? `The time is ${timeStr}` : `समय ${timeStr} बज रहा है`;
+        }
+        
+        // Date queries
+        else if (lowerText.includes('date') || lowerText.includes('डेट') || lowerText.includes('तारीख') || lowerText.includes('आज')) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString(currentLang === 'en' ? 'en-US' : 'hi-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            response = currentLang === 'en' ? `Today is ${dateStr}` : `आज ${dateStr} है`;
+        }
+        
+        // Greetings
+        else if (lowerText.includes('hello') || lowerText.includes('hi') || lowerText.includes('नमस्ते') || lowerText.includes('हेलो')) {
+            response = messages[currentLang].greeting;
+        }
+        
+        // How are you
+        else if (lowerText.includes('how are you') || lowerText.includes('कैसे हो') || lowerText.includes('कैसा है')) {
+            response = currentLang === 'en' ? "I'm doing great, sir! Always ready to serve you. How can I help?" : "मैं बहुत बढ़िया हूँ, सर! हमेशा आपकी सेवा के लिए तैयार। आप कैसे हैं?";
+        }
+        
+        // What can you do / Help
+        else if (lowerText.includes('what can you do') || lowerText.includes('help') || lowerText.includes('मदद') || lowerText.includes('क्या कर सकते हो')) {
+            response = messages[currentLang].help;
+        }
+        
+        // Weather (demo)
+        else if (lowerText.includes('weather') || lowerText.includes('मौसम')) {
+            response = currentLang === 'en' ? "I can't access live weather without internet. Please check your weather app!" : "मैं बिना इंटरनेट के लाइव मौसम नहीं देख सकता। कृपया अपना वेदर ऐप चेक करें!";
+        }
+        
+        // Name
+        else if (lowerText.includes('your name') || lowerText.includes('तुम्हारा नाम') || lowerText.includes('कौन हो')) {
+            response = currentLang === 'en' ? "I am JARVIS, your personal AI voice assistant. Ready to help 24/7!" : "मैं JARVIS हूँ, आपका निजी AI वॉइस असिस्टेंट। 24/7 मदद के लिए तैयार!";
+        }
+        
+        // Thank you
+        else if (lowerText.includes('thank') || lowerText.includes('धन्यवाद') || lowerText.includes('शुक्रिया')) {
+            response = currentLang === 'en' ? "You're most welcome, sir! Always happy to help." : "आपका स्वागत है, सर! मदद करके हमेशा खुशी होती है।";
+        }
+        
+        // Search web
+        else if (lowerText.includes('search') || lowerText.includes('सर्च') || lowerText.includes('ढूंढो')) {
+            let searchTerm = userText.replace(/search|सर्च|ढूंढो/gi, '').trim();
+            if (searchTerm) {
+                response = currentLang === 'en' ? `Searching for "${searchTerm}" on Google.` : `Google पर "${searchTerm}" खोज रहा हूँ।`;
+                setTimeout(() => {
+                    window.open(`https://www.google.com/search?q=${encodeURIComponent(searchTerm)}`, '_blank');
+                }, 1000);
+            } else {
+                response = currentLang === 'en' ? "What would you like me to search for?" : "आप क्या खोजना चाहेंगे?";
+            }
+        }
+        
+        // Open YouTube
+        else if (lowerText.includes('youtube') || lowerText.includes('यूट्यूब') || lowerText.includes('video')) {
+            response = currentLang === 'en' ? "Opening YouTube for you, sir!" : "आपके लिए YouTube खोल रहा हूँ, सर!";
+            setTimeout(() => {
+                window.open('https://m.youtube.com', '_blank');
+            }, 1000);
+        }
+        
+        // Joke
+        else if (lowerText.includes('joke') || lowerText.includes('चुटकुला') || lowerText.includes('मजाक')) {
+            const jokes = currentLang === 'en' 
+                ? ["Why don't scientists trust atoms? Because they make up everything!",
+                   "What do you call a fake noodle? An impasta!",
+                   "Why did the scarecrow win an award? He was outstanding in his field!"]
+                : ["एक आदमी ने कहा - मेरी बीवी मुझसे बहुत प्यार करती है! दूसरे ने पूछा - कैसे पता? पहला बोला - जब भी मैं कहीं जाता हूँ, वो मुझे हैंडग्रेनैड देकर भेजती है ताकि कोई मुझे छू भी न सके!",
+                   "टीचर: तुम्हारे पिताजी क्या करते हैं? छात्र: जो भी माँ कहती हैं!",
+                   "डॉक्टर: आपको दूध के साथ दवा लेनी है। मरीज: ठीक है, दूध कब लाना है?"];
+            response = jokes[Math.floor(Math.random() * jokes.length)];
+        }
+        
+        // AI / GPT-like response for other queries
+        else {
+            const defaultResponses = {
+                en: [
+                    "Interesting! Tell me more about that.",
+                    "I understand. How can I assist you further?",
+                    "That's great! Is there anything specific you'd like to know?",
+                    "I'm here to help. What else can I do for you?"
+                ],
+                hi: [
+                    "दिलचस्प! इसके बारे में और बताइए।",
+                    "मैं समझ गया। मैं और कैसे मदद कर सकता हूँ?",
+                    "यह बहुत अच्छा है! क्या आप कुछ विशेष जानना चाहेंगे?",
+                    "मैं यहाँ मदद करने के लिए हूँ। आपके लिए और क्या कर सकता हूँ?"
+                ]
+            };
+            response = defaultResponses[currentLang][Math.floor(Math.random() * defaultResponses[currentLang].length)];
+        }
+        
+        // Add response and speak
+        setTimeout(() => {
+            addMessage(response, 'jarvis-message');
+            speak(response);
+            jarvisStatus.innerText = messages[currentLang].ready;
+            jarvisCircle.classList.remove('listening');
+        }, 500);
+    }
+
+    // Start voice recognition
+    function startListening() {
+        if (!recognition) {
+            addMessage("Voice recognition not supported. Please type your message.", 'jarvis-message');
+            return;
+        }
+        
+        if (isListening) return;
+        
+        try {
+            // Set language
+            recognition.lang = currentLang === 'en' ? 'en-US' : 'hi-IN';
+            
+            isListening = true;
+            jarvisCircle.classList.add('listening');
+            jarvisStatus.innerText = messages[currentLang].listening;
+            
+            recognition.start();
+            
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                jarvisStatus.innerText = messages[currentLang].processing;
+                processInput(transcript);
+                isListening = false;
+                jarvisCircle.classList.remove('listening');
+            };
+            
+            recognition.onerror = (event) => {
+                console.error('Recognition error:', event.error);
+                jarvisStatus.innerText = messages[currentLang].ready;
+                jarvisCircle.classList.remove('listening');
+                isListening = false;
+                
+                if (event.error === 'not-allowed') {
+                    addMessage("Please allow microphone access to use voice features.", 'jarvis-message');
+                } else if (event.error !== 'no-speech') {
+                    addMessage(messages[currentLang].sorry, 'jarvis-message');
+                }
+            };
+            
+            recognition.onend = () => {
+                isListening = false;
+                if (jarvisStatus.innerText === messages[currentLang].listening) {
+                    jarvisStatus.innerText = messages[currentLang].ready;
+                    jarvisCircle.classList.remove('listening');
+                }
+            };
+            
+        } catch (e) {
+            console.error(e);
+            jarvisStatus.innerText = messages[currentLang].ready;
+            jarvisCircle.classList.remove('listening');
+            isListening = false;
+        }
+    }
+
+    // Change language
+    function setLanguage(lang) {
+        currentLang = lang;
+        
+        // Update button styles
+        langBtns.forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        
+        // Update recognition language if available
+        if (recognition) {
+            recognition.lang = currentLang === 'en' ? 'en-US' : 'hi-IN';
+        }
+        
+        jarvisStatus.innerText = messages[currentLang].ready;
+        
+        // Add language change message
+        const langMsg = currentLang === 'en' ? "Switched to English. You can speak in English now!" : "हिंदी में स्विच किया। अब आप हिंदी में बोल सकते हैं!";
+        addMessage(langMsg, 'jarvis-message');
+        speak(langMsg);
+    }
+
+    // Event Listeners
+    voiceBtn.addEventListener('click', startListening);
+    
+    sendBtn.addEventListener('click', () => {
+        const userText = textInput.value.trim();
+        if (userText) {
+            processInput(userText);
+            textInput.value = '';
+        }
+    });
+    
+    textInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendBtn.click();
+        }
+    });
+    
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            setLanguage(btn.dataset.lang);
+        });
+    });
+    
+    // Optional: Click on JARVIS circle to listen
+    jarvisCircle.addEventListener('click', startListening);
+    
+    // Welcome message with voice
+    setTimeout(() => {
+        speak(messages[currentLang].greeting);
+    }, 500);
+</script>
+
+</body>
+</html>
